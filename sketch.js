@@ -134,11 +134,8 @@ function nearest(pos, arr) {
 }
 
 
-
-function mousePressed() {
-  if (mouseButton === LEFT) {
-    herbs.push(new Herbivore(mouseX, mouseY, new DNA()));
-  }
+function mouseDragged() {
+  herbs.push(new Herbivore(mouseX, mouseY, new DNA()));
 }
 
 
