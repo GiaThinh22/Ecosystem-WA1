@@ -5,6 +5,8 @@ let foods = [];
 let grid;
 let showGrid = false;
 let hudFontSize = 14;
+let MAX_FOOD = 600;
+
 
 let START_HERB = parseInt(prompt("Number of Herbivores?", "300"));
 let START_CARN = parseInt(prompt("Number of Carnivores?", "12"));
@@ -24,8 +26,11 @@ function setup() {
     foods.push(new Food(random(width), random(height)));
 
   setInterval(() => {
-    for (let i = 0; i < 3; i++)
-      foods.push(new Food(random(width), random(height)));
+    if (foods.length < MAX_FOOD) {
+      let spawn = min(3, MAX_FOOD - foods.length);
+      for (let i = 0; i < spawn; i++)
+        foods.push(new Food(random(width), random(height)));
+    }
   }, 1000);
 }
 
@@ -64,6 +69,11 @@ function draw() {
   text("Herbivores: " + herbs.length, 10, 20);
   text("Carnivores: " + carns.length, 10, 40);
   pop();
+
+  if (foods.length > MAX_FOOD){
+    foods.length = MAX_FOOD;
+  }
+
 }
 
 

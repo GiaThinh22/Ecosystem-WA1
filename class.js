@@ -19,6 +19,8 @@ class DNA {
 
 class Agent {
   constructor(x, y, dna) {
+    this.speedBoost = 1;
+  this.speedBoostTimer = 0;
     this.dna = dna;
     this.pos = createVector(x, y);
     this.vel = p5.Vector.random2D();
@@ -75,15 +77,42 @@ class Herbivore extends Agent {
   }
 
   behave(grid) {
+    let maxEnergy = 80 * this.mass;
+
+    let dangerRadius = 3 * grid.size;
+    let nearbyCarn = grid.query(this.pos, dangerRadius, carns);
+
+    if (this.energy > 0.5 * maxEnergy && nearbyCarn.length > 0) {
+      let threat = nearest(this.pos, nearbyCarn);
+
+      let desired = p5.Vector.sub(this.pos, threat.pos);
+      desired.setMag(this.maxSpeed * 1.25);
+      let steer = p5.Vector.sub(desired, this.vel);
+      steer.limit(this.maxForce * 1.5);
+      this.applyForce(steer);
+
+      this.speedBoost = 1.25;
+      this.speedBoostTimer = 30;
+      return;
+    }
+
     let nearbyFood = grid.query(this.pos, this.dna.perception, foods);
     let nearbyHerb = grid.query(this.pos, this.dna.perception, herbs);
 
-    if (this.energy < 0.3 * 80 * this.mass || !this.hasEaten) {
+    if (this.energy < 0.3 * maxEnergy || !this.hasEaten) {
       let f = nearest(this.pos, nearbyFood);
       if (f) this.applyForce(this.seek(f.pos));
+
       if (f && p5.Vector.dist(this.pos, f.pos) < 6 * this.dna.size) {
         this.energy += 25;
         this.hasEaten = true;
+
+        let k = random(["size", "maxSpeed", "agility", "perception"]);
+        this.dna[k] *= random(1.01, 1.05);
+
+        this.speedBoost = 1.1;
+        this.speedBoostTimer = 60;
+
         spawnFoodAt(f.pos);
         foods.splice(foods.indexOf(f), 1);
       }
@@ -113,6 +142,7 @@ class Herbivore extends Agent {
     circle(this.pos.x, this.pos.y, this.dna.size * 6);
   }
 }
+
 
 
 
