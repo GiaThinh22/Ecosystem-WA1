@@ -8,8 +8,8 @@ let hudFontSize = 14;
 let MAX_FOOD = 600;
 
 
-let START_HERB = parseInt(prompt("Number of Herbivores?", "300"));
-let START_CARN = parseInt(prompt("Number of Carnivores?", "12"));
+let START_HERB = parseInt(prompt("Number of Herbivores?", "250"));
+let START_CARN = parseInt(prompt("Number of Carnivores?", "10"));
 
 
 

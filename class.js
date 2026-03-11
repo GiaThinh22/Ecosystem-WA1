@@ -117,10 +117,12 @@ class Herbivore extends Agent {
         foods.splice(foods.indexOf(f), 1);
       }
     } else {
-      let mate = nearest(this.pos, nearbyHerb.filter(h => h !== this));
-      if (mate) this.applyForce(this.seek(mate.pos));
-      if (mate && p5.Vector.dist(this.pos, mate.pos) < 8 * this.dna.size)
-        this.reproduce(mate);
+      for(let i = 0; i<5; i++){
+        let mate = nearest(this.pos, nearbyHerb.filter(h => h !== this));
+        if (mate) this.applyForce(this.seek(mate.pos));
+        if (mate && p5.Vector.dist(this.pos, mate.pos) < 8 * this.dna.size)
+          this.reproduce(mate);
+      }
     }
   }
 
